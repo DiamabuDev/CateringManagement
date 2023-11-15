@@ -1,0 +1,71 @@
+﻿@model IEnumerable<CateringManagement.Models.Customer>
+
+<partial name="_ViewHeading" />
+
+<form asp-action="Index" method="get">
+    <input type="hidden" name="sortDirection" value="@ViewData["sortDirection"]" />
+    <input type="hidden" name="sortField" value="@ViewData["sortField"]" />
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    <input type="submit" name="actionButton" value="Customer" class="btn btn-link" />
+                </th>
+                <th>
+                    <input type="submit" name="actionButton" value="Company Name" class="btn btn-link" />
+                </th>
+                <th>
+                    <input type="submit" name="actionButton" value="Phone" class="btn btn-link" />
+                </th>
+                <th>
+                    <input type="submit" name="actionButton" value="Customer Code" class="btn btn-link" />
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @{
+                            if (item.CustomerThumbnail?.Content != null)
+                            {
+                                string imageBase64 = Convert.ToBase64String(item.CustomerThumbnail.Content);
+                                string imageSrc = string.Format("data:" + item.CustomerThumbnail.MimeType + ";base64,{0}", imageBase64);
+                                <img src="@imageSrc" alt="Profile Picture of @item.FullName" title="Profile Picture of @item.FullName" class="img-fluid rounded" />
+                            }
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Summary)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneFormatted)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerCode)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <partial name="_PagingNavBar" />
+</form>
+@section Scripts {
+    <script type="text/javascript">
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+}
